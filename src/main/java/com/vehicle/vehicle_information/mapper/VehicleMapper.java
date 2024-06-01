@@ -16,6 +16,10 @@ public class VehicleMapper {
         return vehicle;
     }
 
+    public static VehicleDto MapToVehicleDto( Vehicle vehicle){
+        return VehicleDto.builder().owner(vehicle.getOwner()).brand(vehicle.getBrand()).rto(vehicle.getRto()).colours(vehicle.getColours()).regNo(vehicle.getRegNo()).createdBy(vehicle.getCreatedBy()).createdOn(vehicle.getCreatedOn()).updatedBy(vehicle.getUpdatedBy()).updatedOn(vehicle.getUpdatedOn()).build();
+    }
+
 
 
 }

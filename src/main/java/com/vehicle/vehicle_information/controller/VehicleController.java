@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 @RestController
 @RequestMapping(value = "/vehicle")
 public class VehicleController {
@@ -38,6 +40,28 @@ public class VehicleController {
         return new ResponseEntity<>(ResponseDto.builder().message("Data Saved!!").statusCode(HttpStatus.CREATED.value()).Data(vehicleService.saveVehicle(vehicleDto)).build(),HttpStatus.CREATED);
 
     }
+
+    @DeleteMapping("{vehicleId}")
+    public ResponseEntity<?> deleteVehicleInfo(@PathVariable int vehicleId){
+
+        return new ResponseEntity<>(ResponseDto.builder().message("Data deleted!!").statusCode(HttpStatus.OK .value()).Data(vehicleService.deleteVehicle(vehicleId)).build(),HttpStatus.OK);
+
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateVehicleInfo(@RequestBody VehicleDto vehicleDto){
+
+        return new ResponseEntity<>(ResponseDto.builder().message("Data Updated!!").statusCode(HttpStatus.ACCEPTED.value()).Data(vehicleService.updateVehicle(vehicleDto)).build(),HttpStatus.ACCEPTED);
+
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<?> searchVehicleByText(@RequestParam("SearchText") String searchText){
+
+        return new ResponseEntity<>(ResponseDto.builder().message("Data Searched!!").statusCode(HttpStatus.FOUND.value()).vehicles(Collections.singletonList(vehicleService.findVehicleBySearchText(searchText))).build(),HttpStatus.FOUND);
+
+    }
+
 
 
 
