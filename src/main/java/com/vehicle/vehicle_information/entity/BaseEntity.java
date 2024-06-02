@@ -1,14 +1,13 @@
 package com.vehicle.vehicle_information.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Date;
+
+import javax.persistence.*;
+import java.sql.Date;
+
 
 @Getter
 @Setter

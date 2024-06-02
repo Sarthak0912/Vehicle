@@ -20,6 +20,8 @@ public interface VehicleService {
 
     public List<VehicleDto> findVehicleBySearchText(String searchText);
 
-    public PageResponse<?> findVehicleInPages(int pageNo,int pageSize,String sortBy,String sortDir);
+    public PageResponse<?> findAll(int pageNo,int pageSize,String sortBy,String sortDir);
+
+    public PageResponse<?> findAllWithPagination(String searchText,int pageNo, int pageSize, String sortBy, String sortDir);
 
 }

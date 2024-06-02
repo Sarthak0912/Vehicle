@@ -4,6 +4,8 @@ import com.vehicle.vehicle_information.model.ResponseDto;
 import com.vehicle.vehicle_information.model.VehicleDto;
 import com.vehicle.vehicle_information.service.VehicleService;
 import com.vehicle.vehicle_information.service.impl.VehicleServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,18 +16,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 
 @RestController
+@Tag(name="Vehicle Controller",description = "It gives vehicle Information.")
 @RequestMapping(value = "/vehicle")
 public class VehicleController {
 
     @Autowired
     VehicleService vehicleService;
 
+    @Operation(summary = "Used for getting details using registration number.")
     @GetMapping (value = "{vehicleId}")
     public ResponseEntity<?> getVehicleByPathVariable(@PathVariable int vehicleId){
 
         return new ResponseEntity<>(ResponseDto.builder().message("Found data").statusCode(HttpStatus.FOUND.value()).Data(vehicleService.findVehicle(vehicleId)).build(),HttpStatus.FOUND);
 
     }
+
 
     @GetMapping
     public ResponseEntity<?> getVehicleByRP(@RequestParam("VID") int id){
@@ -59,6 +64,20 @@ public class VehicleController {
     public ResponseEntity<?> searchVehicleByText(@RequestParam("SearchText") String searchText){
 
         return new ResponseEntity<>(ResponseDto.builder().message("Data Searched!!").statusCode(HttpStatus.FOUND.value()).vehicles(Collections.singletonList(vehicleService.findVehicleBySearchText(searchText))).build(),HttpStatus.FOUND);
+
+    }
+
+    @GetMapping("searchAll")
+    public ResponseEntity<?> searchVehicleByPagination(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,@RequestParam("sortDir") String sortDir,@RequestParam("sortBy") String sortBy){
+
+        return new ResponseEntity<>(ResponseDto.builder().message("Data Searched!!").statusCode(HttpStatus.FOUND.value()).vehicles(Collections.singletonList(vehicleService.findAll(pageNo, pageSize, sortBy, sortDir))).build(),HttpStatus.FOUND);
+
+    }
+
+    @GetMapping("searchPage")
+    public ResponseEntity<?> searchAll(@RequestParam("SearchText") String searchText,@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize,@RequestParam("sortDir") String sortDir,@RequestParam("sortBy") String sortBy){
+
+        return new ResponseEntity<>(ResponseDto.builder().message("Data Searched!!").statusCode(HttpStatus.FOUND.value()).vehicles(Collections.singletonList(vehicleService.findAllWithPagination(searchText,pageNo,pageSize,sortBy,sortDir))).build(),HttpStatus.FOUND);
 
     }
 

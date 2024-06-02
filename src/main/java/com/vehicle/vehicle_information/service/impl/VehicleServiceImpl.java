@@ -9,7 +9,11 @@ import com.vehicle.vehicle_information.repository.VehicleRepository;
 import com.vehicle.vehicle_information.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -18,10 +22,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class VehicleServiceImpl implements VehicleService {
 
     @Autowired
     VehicleRepository vehicleRepository;
+
 
     @Override
     public VehicleDto findVehicle(int id) {
@@ -95,11 +101,37 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public PageResponse<?> findVehicleInPages(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public PageResponse<?> findAll(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Vehicle> page = vehicleRepository.findAll(pageable);
+        List<Vehicle> vehicles = page.getContent();
+        List<VehicleDto> vehicleDtoList = vehicles.stream().map(VehicleMapper::MapToVehicleDto).collect(Collectors.toList());
+        PageResponse<VehicleDto> pageResponse = new PageResponse<>();
+        pageResponse.setPageNo(page.getNumber());
+        pageResponse.setPageSize(page.getSize());
+        pageResponse.setIsLast(page.isLast());
+        pageResponse.setTotalPages(page.getTotalPages());
+        pageResponse.setVehicles(vehicleDtoList);
 
+        return pageResponse;
+    }
 
+    @Override
+    public PageResponse<?> findAllWithPagination(String searchText,int pageNo, int pageSize, String sortBy, String sortDir) {
+       Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+       Pageable pageable=PageRequest.of(pageNo,pageSize,sort);
+       Page<Vehicle> page= vehicleRepository.findVehicleBySearchPagination(searchText,pageable);
+       List<Vehicle> vehicles=page.getContent();
+       List<VehicleDto> vehicleDtoList=vehicles.stream().map(VehicleMapper::MapToVehicleDto).collect(Collectors.toList());
+       PageResponse<VehicleDto> pageResponse=new PageResponse<>();
+       pageResponse.setVehicles(vehicleDtoList);
+       pageResponse.setTotalPages(page.getTotalPages());
+       pageResponse.setPageSize(page.getSize());
+       pageResponse.setPageNo(page.getNumber());
+       pageResponse.setIsLast(page.isLast());
 
-        return null;
+        return pageResponse;
     }
 
 

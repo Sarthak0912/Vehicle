@@ -1,6 +1,8 @@
 package com.vehicle.vehicle_information.repository;
 
 import com.vehicle.vehicle_information.entity.Vehicle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -21,5 +23,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
     @Query("select v from vehicle v where lower(v.owner) like lower(concat(:SearchText,'%'))")
    public List<Vehicle>  findVehicleBySearchText(@Param("SearchText") String searchText);
 
+    @Query("select v from vehicle v where lower(v.owner) like lower(concat(:SearchText,'%'))")
+    public Page<Vehicle> findVehicleBySearchPagination(@Param("SearchText") String searchText, Pageable pageable);
 
 }

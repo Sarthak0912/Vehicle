@@ -1,13 +1,14 @@
 package com.vehicle.vehicle_information.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.util.List;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageResponse <T>{
 
     String message;
